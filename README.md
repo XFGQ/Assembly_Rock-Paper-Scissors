@@ -29,7 +29,7 @@ The required tools depend on your operating system:
 
 | Platform | Tools Required |
 |----------|----------------|
-| Linux    | NASM + GCC |
+| Linux    | NASM + LD |
 | Windows  | NASM + MinGW (for GCC) |
 | macOS    | NASM + `ld` or `clang` (and 32/64-bit support) |
 
@@ -39,23 +39,24 @@ The required tools depend on your operating system:
 
 > 💡 File to use: `rock_paper_scissors_linux.asm`
 
-1. Install NASM and GCC:
+1. Install NASM:
 ```bash
 sudo apt update
-sudo apt install nasm gcc
+sudo apt install nasm
 ```
 
-2. Compile and run:
+2. Compile and link with **LD**:
 ```bash
 nasm -f elf32 rock_paper_scissors_linux.asm -o rps.o
-gcc -m32 rps.o -o rps
+ld -m elf_i386 -o rps rps.o
+```
+
+3. Run:
+```bash
 ./rps
 ```
 
-> 🧠 If you are on a 64-bit system, install multilib support:
-```bash
-sudo apt install gcc-multilib
-```
+> 🧠 No need for `gcc`. This version uses raw system calls (`int 0x80`) and links directly using `ld`.
 
 ---
 
@@ -129,9 +130,9 @@ Rock beats Scissors — You win!
 
 | File Name                        | Description                       |
 |----------------------------------|-----------------------------------|
-| rock_paper_scissors_linux.asm   | Works on Linux with `int 0x80`    |
-| rock_paper_scissors_win.asm     | Works on Windows using C calls    |
-| rock_paper_scissors_macos.asm   | Works on macOS using `syscall`    |
+| rock_paper_scissors_linux.asm   | Works on Linux using `int 0x80` and `ld` |
+| rock_paper_scissors_win.asm     | Works on Windows using C runtime |
+| rock_paper_scissors_macos.asm   | Works on macOS using `syscall`   |
 
 ---
 
